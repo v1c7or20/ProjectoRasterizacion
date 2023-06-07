@@ -161,14 +161,15 @@ void processInput(GLFWwindow *window) {
     }
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_RELEASE){
         if (boton_presionado) {
-            float x = rand()%10;
-            float y = rand()%10;
-            float z = rand()%10;
+            float x = cos(glm::radians(camera.Yaw)) * cos(glm::radians(camera.Pitch));
+            float y =  sin(glm::radians(camera.Pitch));
+            float z = sin(glm::radians(camera.Yaw)) * cos(glm::radians(camera.Pitch));
             Objeto *pE = new Esfera(glm::vec3(x,y,z));
-            pE->v0 = 20;
+            pE->v0 = vec3(x*100,y*100,z*50);
             pE->a0 = 40 + rand() % 20;
             pE->x0 = x;
             pE->y0 = y;
+            pE->z0 = z+50;
             pE->vao = esfera.vao;
             pE->color = vec3((float) rand()/RAND_MAX,(float) rand()/RAND_MAX,(float) rand()/RAND_MAX);
             pE->startTime = static_cast<float>(glfwGetTime());

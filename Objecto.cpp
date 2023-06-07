@@ -79,12 +79,14 @@ void Esfera::display(Shader &sh){
     }
 }
 void Esfera::actualizarPosicion(float t) {
-    std::cout<<t-startTime<<endl;
+    std::cout<<v0.x<<" "<<v0.y<<" "<<v0.z<<endl;
     float g = 9.8;
     float theta = radians(a0);
     float mov = float(t) - startTime;
-    xt = x0 + v0 * cos(theta) * mov;
-    yt = y0 + v0 * sin(theta) * mov - 0.5 * g * mov * mov;
+    xt = x0 + v0.x * cos(theta) * mov;
+    yt = y0 + v0.y * sin(theta) * mov - 0.5 * g * mov * mov;
+    zt = z0 + v0.z * cos(theta) * mov;
     centro.x = xt;
     centro.y = yt;
+    centro.z = zt;
 }

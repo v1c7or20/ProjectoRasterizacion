@@ -18,7 +18,8 @@ public:
     vec3 color;
     vector<GLuint> indices;
     GLuint indices_size;
-    float v0, x0, y0, a0, xt, yt;
+    float x0, y0, z0, a0, xt, yt, zt;
+    vec3 v0;
     float startTime;
     GLuint vao;
     mat4 model;
