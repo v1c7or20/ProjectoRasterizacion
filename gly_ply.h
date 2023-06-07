@@ -22,7 +22,7 @@ public:
     void    display(Shader &sh);
     void    actualizarDatos(float t);
     void move ( int tiempo);
-    void    actualizarPosicion(int tiempo) {}
+    void    actualizarPosicion(float tiempo) {}
 };
 
 #endif

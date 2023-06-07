@@ -78,11 +78,13 @@ void Esfera::display(Shader &sh){
         glBindVertexArray(0);
     }
 }
-void Esfera::actualizarPosicion(int t) {
+void Esfera::actualizarPosicion(float t) {
+    std::cout<<t-startTime<<endl;
     float g = 9.8;
     float theta = radians(a0);
-    xt = x0 + v0 * cos(theta) * t;
-    yt = y0 + v0 * sin(theta) * t - 0.5 * g * t * t;
+    float mov = float(t) - startTime;
+    xt = x0 + v0 * cos(theta) * mov;
+    yt = y0 + v0 * sin(theta) * mov - 0.5 * g * mov * mov;
     centro.x = xt;
     centro.y = yt;
 }

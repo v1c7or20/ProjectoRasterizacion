@@ -3,13 +3,14 @@
 #include "include/glm/glm.hpp"
 #include "include/glm/gtc/matrix_transform.hpp"
 #include "include/glm/gtc/type_ptr.hpp"
-
-//#include <learnopengl/filesystem.h>
+#include "include/filesystem.h"
 #include "include/shader_s.h"
 #include "include/Camara.h"
 #include "Objecto.h"
 #include "gly_ply.h"
+#include "include/stb_image.h"
 #include <iostream>
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
@@ -40,7 +41,7 @@ vector<Objeto*> objetos;
 bool boton_presionado = false;
 
 int main() {
-    char *archivo = "../resources/models/bunny.ply";
+    char *archivo = "../resources/models/hoop.ply";
     modelo.Load(archivo);
 
     // glfw: initialize and configure
@@ -101,25 +102,27 @@ int main() {
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // be sure to activate shader when setting uniforms/drawing objects
-        lightingShader.use();
-        lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
-        lightingShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
-        lightingShader.setVec3("lightPos", lightPos);
-        lightingShader.setVec3("viewPos", camera.Position);
 
-        // view/projection transformations
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        glm::mat4 view = camera.GetViewMatrix();
-        lightingShader.setMat4("projection", projection);
-        lightingShader.setMat4("view", view);
-
-        // world transformation
-        glm::mat4 model = glm::mat4(1.0f);        lightingShader.setMat4("model", model);
 
         //esfera.display(lightingShader);
         //pEsfera->display(lightingShader);
         for (auto &obj : objetos) {
+            // be sure to activate shader when setting uniforms/drawing objects
+            lightingShader.use();
+            lightingShader.setVec3("objectColor", obj->color.x, obj->color.y, obj->color.z);
+            lightingShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+            lightingShader.setVec3("lightPos", lightPos);
+            lightingShader.setVec3("viewPos", camera.Position);
+
+            // view/projection transformations
+            glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+            glm::mat4 view = camera.GetViewMatrix();
+            lightingShader.setMat4("projection", projection);
+            lightingShader.setMat4("view", view);
+
+            // world transformation
+            glm::mat4 model = glm::mat4(1.0f);
+            lightingShader.setMat4("model", model);
             obj->actualizarPosicion(tiempoTranscurrido);
             obj->display(lightingShader);
         }
@@ -167,11 +170,11 @@ void processInput(GLFWwindow *window) {
             pE->x0 = x;
             pE->y0 = y;
             pE->vao = esfera.vao;
+            pE->color = vec3((float) rand()/RAND_MAX,(float) rand()/RAND_MAX,(float) rand()/RAND_MAX);
+            pE->startTime = static_cast<float>(glfwGetTime());
             pE->indices_size = esfera.indices_size;
             objetos.emplace_back(pE);
             boton_presionado = false;
-            //cout << endl << x << " " << y << " " << z << " " << pE->a0;
-            tiempoInicial = static_cast<float>(glfwGetTime());
         }
     }
 

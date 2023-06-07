@@ -15,16 +15,18 @@ public:
     vector<vec3> positions;
     vector<vec3> normals;
     vector<vec2> textureCoords;
+    vec3 color;
     vector<GLuint> indices;
     GLuint indices_size;
     float v0, x0, y0, a0, xt, yt;
+    float startTime;
     GLuint vao;
     mat4 model;
     bool visible=true;
     GLint POSITION_ATTRIBUTE=0, NORMAL_ATTRIBUTE=1, TEXCOORD0_ATTRIBUTE=8;
     virtual GLuint setup()=0;
     virtual void display(Shader &sh)=0;
-    virtual void actualizarPosicion(int tiempo)=0;
+    virtual void actualizarPosicion(float tiempo)=0;
 };
 
 class Esfera:public Objeto{
@@ -47,7 +49,7 @@ public:
     GLuint setup();
 
     void display(Shader &sh);
-    void actualizarPosicion(int tiempo);
+    void actualizarPosicion(float tiempo);
 };
 
 #endif //LEARNOPENGL_OBJETO_H
