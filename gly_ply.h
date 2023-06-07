@@ -23,6 +23,7 @@ public:
     void    actualizarDatos(float t);
     void move ( int tiempo);
     void    actualizarPosicion(float tiempo) {}
+    bool expire(float t1){}
 };
 
 #endif

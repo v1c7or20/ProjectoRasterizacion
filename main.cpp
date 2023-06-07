@@ -41,9 +41,9 @@ vector<Objeto*> objetos;
 bool boton_presionado = false;
 
 int main() {
-    char *archivo = "../resources/models/hoop.ply";
+    char *archivo = "../resources/models/bunny.ply";
     modelo.Load(archivo);
-
+    modelo.color=vec3(0.5f,0.5f,0.5f);
     // glfw: initialize and configure
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -106,7 +106,9 @@ int main() {
 
         //esfera.display(lightingShader);
         //pEsfera->display(lightingShader);
+        int objT;
         for (auto &obj : objetos) {
+            objT = 0;
             // be sure to activate shader when setting uniforms/drawing objects
             lightingShader.use();
             lightingShader.setVec3("objectColor", obj->color.x, obj->color.y, obj->color.z);
@@ -125,9 +127,13 @@ int main() {
             lightingShader.setMat4("model", model);
             obj->actualizarPosicion(tiempoTranscurrido);
             obj->display(lightingShader);
+            if (obj->expire(tiempoTranscurrido)){
+                objetos.erase(objetos.begin()+objT);
+            }
         }
+        lightingShader.setVec3("objectColor", modelo.color.x, modelo.color.y, modelo.color.z);
         modelo.display(lightingShader);
-
+        objT=0;
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -148,14 +154,6 @@ void processInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera.ProcessKeyboard(FORWARD, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera.ProcessKeyboard(BACKWARD, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.ProcessKeyboard(LEFT, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera.ProcessKeyboard(RIGHT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS){
         boton_presionado = true;
     }
@@ -165,11 +163,11 @@ void processInput(GLFWwindow *window) {
             float y =  sin(glm::radians(camera.Pitch));
             float z = sin(glm::radians(camera.Yaw)) * cos(glm::radians(camera.Pitch));
             Objeto *pE = new Esfera(glm::vec3(x,y,z));
-            pE->v0 = vec3(x*100,y*100,z*50);
+            pE->v0 = vec3(x*100,y*70,z*120);
             pE->a0 = 40 + rand() % 20;
             pE->x0 = x;
             pE->y0 = y;
-            pE->z0 = z+50;
+            pE->z0 = z+400;
             pE->vao = esfera.vao;
             pE->color = vec3((float) rand()/RAND_MAX,(float) rand()/RAND_MAX,(float) rand()/RAND_MAX);
             pE->startTime = static_cast<float>(glfwGetTime());

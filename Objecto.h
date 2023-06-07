@@ -28,6 +28,7 @@ public:
     virtual GLuint setup()=0;
     virtual void display(Shader &sh)=0;
     virtual void actualizarPosicion(float tiempo)=0;
+    virtual bool expire(float t1)=0;
 };
 
 class Esfera:public Objeto{
@@ -51,6 +52,7 @@ public:
 
     void display(Shader &sh);
     void actualizarPosicion(float tiempo);
+    bool expire(float t1);
 };
 
 #endif //LEARNOPENGL_OBJETO_H
