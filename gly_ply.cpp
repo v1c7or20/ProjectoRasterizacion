@@ -9,6 +9,9 @@
 
 Model_PLY::Model_PLY() {
     centro = vec3(0.0);
+    bs = new BoundingSphere();
+    bs->centro = vec3(centro.x,centro.y+1,centro.z);
+    bs->radio = 1.0f;
 }
 
 int Model_PLY::Load(char* filename) {
@@ -81,6 +84,7 @@ int Model_PLY::Load(char* filename) {
     } else {
         printf("File does not have a .PLY extension. ");
     }
+    obtenerBS();
     return 0;
 }
 
@@ -120,9 +124,9 @@ int Model_PLY::enviar_GPU() {
     return vao;
 }
 
-void Model_PLY::display(Shader &sh) {
+void Model_PLY::display(Shader &sh, float radius_n) {
     model = mat4(1.0);
-    model = scale(model, vec3(10));
+    model = scale(model, vec3(radius_n));
     model = translate(model, centro);
     sh.setMat4("model", model);
     if (true) {
@@ -135,4 +139,25 @@ void Model_PLY::display(Shader &sh) {
 
 void Model_PLY::move( int tiempo){
 
+}
+
+void Model_PLY::obtenerBS(){
+    vec3 maximo = positions[0], minimo = positions[0];
+    for (auto &pos : positions) {
+        maximo.x = pos.x > maximo.x ? pos.x : maximo.x;
+        maximo.y = pos.y > maximo.y ? pos.y : maximo.y;
+        maximo.z = pos.z > maximo.z ? pos.z : maximo.z;
+        minimo.x = pos.x < minimo.x ? pos.x : minimo.x;
+        minimo.y = pos.y < minimo.y ? pos.y : minimo.y;
+        minimo.z = pos.z < minimo.z ? pos.z : minimo.z;
+    }
+    vec3 medio = (maximo + minimo);
+    medio /= 2.0;
+    bs->centro = medio;
+    bs->centro.z = bs->centro.z/6.6f;
+    bs->radio = ((maximo-minimo).length() / 2.0);
+}
+void Model_PLY::actualizarBS() {
+    bs->centro = centro;
+    bs->radio = 1;
 }

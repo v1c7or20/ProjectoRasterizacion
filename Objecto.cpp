@@ -66,9 +66,9 @@ GLuint Esfera::setup() {
     return vao;
 }
 
-void Esfera::display(Shader &sh){
+void Esfera::display(Shader &sh, float radius_n){
     model = mat4(1.0);
-    model = scale(model, vec3(0.1));
+    model = scale(model, vec3(escala));
     //cout << endl << to_string(centro);
     model = translate(model, centro);
     sh.setMat4("model", model);
@@ -77,9 +77,10 @@ void Esfera::display(Shader &sh){
         glDrawElements(GL_TRIANGLES, indices_size, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
     }
+
 }
+
 void Esfera::actualizarPosicion(float t) {
-    std::cout<<startTime-t<<endl;
     float g = 9.8;
     float theta = radians(a0);
     float mov = float(t) - startTime;
@@ -89,6 +90,7 @@ void Esfera::actualizarPosicion(float t) {
     centro.x = xt;
     centro.y = yt;
     centro.z = zt;
+    actualizarBS();
 }
 
 bool Esfera::expire(float t1){
@@ -97,4 +99,9 @@ bool Esfera::expire(float t1){
     }else{
         return false;
     }
+}
+
+void Esfera::actualizarBS() {
+    bs->radio = radius*escala;
+    bs->centro = centro;
 }
