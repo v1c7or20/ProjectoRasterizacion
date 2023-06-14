@@ -126,7 +126,7 @@ int Model_PLY::enviar_GPU() {
 
 void Model_PLY::display(Shader &sh, float radius_n) {
     model = mat4(1.0);
-    model = scale(model, vec3(radius_n));
+    model = scale(model, vec3(8));
     model = translate(model, centro);
     sh.setMat4("model", model);
     if (true) {

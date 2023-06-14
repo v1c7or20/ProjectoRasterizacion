@@ -25,6 +25,7 @@ Camera camera(glm::vec3(0.0f, 0.0f, 40.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
+float fuerza = 0;
 
 // timing
 float deltaTime = 0.0f;
@@ -40,9 +41,12 @@ Esfera modelo(vec3(5,5,5));
 vector<Objeto*> objetos;
 bool boton_presionado = false;
 
+Model_PLY conejo;
 
 int main() {
     char *archivo = "../resources/models/bunny.ply";
+    conejo.Load(archivo);
+
     // glfw: initialize and configure
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -92,6 +96,8 @@ int main() {
     modelo.actualizarBS();
     float intersect_t = 0;
 
+    conejo.setup();
+    conejo.centro = vec3(0.6,0.5,3);
     // render loop
     while (!glfwWindowShouldClose(window)) {
         // per-frame time logic
@@ -154,6 +160,8 @@ int main() {
         lightingShader.setVec3("objectColor", modelo.color.x, modelo.color.y, modelo.color.z);
         modelo.display(lightingShader,0.4f);
         objT=0;
+        lightingShader.setVec3("objectColor", (float) rand()/RAND_MAX, (float)rand()/RAND_MAX,(float)rand()/RAND_MAX);
+        conejo.display(lightingShader,1);
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -183,9 +191,7 @@ void processInput(GLFWwindow *window) {
         camera.ProcessKeyboard(RIGHT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS){
         boton_presionado = true;
-    }
-    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS){
-        boton_presionado = true;
+        fuerza+=0.5;
     }
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_RELEASE){
         if (boton_presionado) {
@@ -193,7 +199,7 @@ void processInput(GLFWwindow *window) {
             float y =  sin(glm::radians(camera.Pitch));
             float z = sin(glm::radians(camera.Yaw)) * cos(glm::radians(camera.Pitch));
             Objeto *pE = new Esfera(glm::vec3(x,y,z));
-            pE->v0 = vec3(x*100,y*70,z*120);
+            pE->v0 = vec3(x*100,y*70,z*fuerza);
             pE->a0 = 40 + rand() % 20;
             pE->x0 = x;
             pE->y0 = y;
@@ -206,6 +212,7 @@ void processInput(GLFWwindow *window) {
             pES->radius=esfera.radius;
             objetos.emplace_back(pE);
             boton_presionado = false;
+            fuerza=0;
         }
     }
 
