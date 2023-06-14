@@ -90,6 +90,7 @@ int main() {
     modelo.y0 = 0.5f;
     modelo.z0 = 0.5f;
     modelo.actualizarBS();
+    float intersect_t = 0;
 
     // render loop
     while (!glfwWindowShouldClose(window)) {
@@ -134,12 +135,16 @@ int main() {
             obj->display(lightingShader,0.1);
             if (obj->bs->intersecta(*modelo.bs)) {
                 modelo.color = vec3(1, 0, 0);
-                prev_intersect = true;
                 modelo.centro = vec3 (rand()%20-10,rand()%20-10,0);
+                prev_intersect = true;
                 modelo.actualizarBS();
+                intersect_t = tiempoTranscurrido;
             } else {
                 if (!prev_intersect){
-                    modelo.color = vec3(0.5f, 0.5f, 0.5f);
+                    if(intersect_t + 1 <= tiempoTranscurrido){
+                        modelo.color = vec3(0.5f, 0.5f, 0.5f);
+                        intersect_t = 0;
+                    }
                 }
             }
             if (obj->expire(tiempoTranscurrido)) {

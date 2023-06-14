@@ -25,9 +25,6 @@ public:
                 pow(bs.centro.y -centro.y,2) +
                 pow(bs.centro.z - centro.z,2));
         auto radsum= abs(bs.radio) + abs(radio);
-        if (temp < 100){
-            std::cout<<"a"<<std::endl;
-        }
         return temp <= radsum;
     }
 };

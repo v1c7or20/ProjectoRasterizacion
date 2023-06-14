@@ -102,6 +102,6 @@ bool Esfera::expire(float t1){
 }
 
 void Esfera::actualizarBS() {
-    bs->radio = radius*escala;
+    bs->radio = radius*escala*1.8;
     bs->centro = centro;
 }
