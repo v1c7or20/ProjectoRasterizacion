@@ -191,7 +191,7 @@ void processInput(GLFWwindow *window) {
         camera.ProcessKeyboard(RIGHT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS){
         boton_presionado = true;
-        fuerza+=0.5;
+        fuerza+=0.1;
     }
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_RELEASE){
         if (boton_presionado) {
